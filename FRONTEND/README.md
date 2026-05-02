@@ -8,7 +8,7 @@ Ez a mappa a későbbi kliensoldali alkalmazás helye. Jelenleg a backend kész�
 BerAutoProject/FRONTEND/
 ```
 
-## Javasolt frontend szerkezet
+## Frontend szerkezet
 
 ```text
 FRONTEND/
