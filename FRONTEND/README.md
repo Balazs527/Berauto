@@ -35,6 +35,9 @@ FRONTEND/
 ```text
 http://localhost:8888
 ```
+```text
+http://localhost:8888/swagger
+```
 
 ## Fontos dokumentáció
 
