@@ -1,0 +1,29 @@
+{
+  "folders": [
+    {
+      "name": "BACKEND",
+      "path": "BACKEND"
+    },
+    {
+      "name": "FRONTEND",
+      "path": "FRONTEND"
+    },
+    {
+      "name": "DOCUMENTATION",
+      "path": "DOCUMENTATION"
+    }
+  ],
+  "launch": {
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "name": "BACKEND - BérAutó API",
+        "type": "python",
+        "request": "launch",
+        "program": "${workspaceFolder:BACKEND}/run_app.py",
+        "cwd": "${workspaceFolder:BACKEND}",
+        "console": "integratedTerminal"
+      }
+    ]
+  }
+}
