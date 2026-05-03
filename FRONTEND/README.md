@@ -1,48 +1,33 @@
 # BérAutó FRONTEND
 
-Ez a mappa a későbbi kliensoldali alkalmazás helye. Jelenleg a backend készült el, ezért a frontend csak előkészített struktúrát tartalmaz.
+Ez a mappa a későbbi kliensoldali alkalmazás helye.
 
-## Helye a projektben
-
-```text
-BerAutoProject/FRONTEND/
-```
-
-## Frontend szerkezet
+Javasolt felépítés:
 
 ```text
 FRONTEND/
-├─ public/
-└─ src/
-   ├─ assets/
-   ├─ components/
-   ├─ pages/
-   └─ services/
+  public/
+  src/
+    assets/
+    components/
+    pages/
+    services/
 ```
 
-## Rétegek
+## 
 
-| Mappa | Feladat |
-|---|---|
-| `src/pages/` | Oldalak: autólista, login, register, profil, ügyintézői és admin felületek |
-| `src/components/` | Újrahasznosítható elemek: Navbar, CarCard, RentalTable, CarForm, RentalForm |
-| `src/services/` | API hívások: AuthService, CarService, RentalService, ClerkService, AdminService |
-| `src/assets/` | Képek, ikonok, statikus fájlok |
-| `public/` | Publikus frontend fájlok |
+## Tervezett frontend rétegek
 
-## Backend alap URL
+* `pages` - oldalak, például autólista, bejelentkezés, profil, ügyintézői felület, admin felület
+* `components` - újrahasznosítható komponensek, például autókártya, táblázat, űrlap, navigáció
+* `services` - backend API-hívásokat végző modulok, például AuthService, CarService, RentalService
+* `assets` - képek, ikonok és statikus fájlok
+
+
+
+A backend API alapértelmezett címe fejlesztés közben:
 
 ```text
 http://localhost:8888
 ```
-```text
-http://localhost:8888/swagger
-```
 
-## Fontos dokumentáció
-
-| Dokumentum | Mire való? |
-|---|---|
-| `../DOCUMENTATION/04_api_vegponterv_klienshez.md` | Végpontok és kérés-válasz adatok |
-| `../DOCUMENTATION/05_frontend_felepitesi_terv.md` | Frontend oldalak, service-ek és komponensek |
-| `../DOCUMENTATION/06_osszefoglalo_tablazat.md` | Rövid áttekintés |

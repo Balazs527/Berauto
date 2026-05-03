@@ -1,10 +1,6 @@
 # Adatbázis mezők és kapcsolatok
 
-A dokumentum a jelenlegi projekt `BACKEND/database.sql` fájlja és a `BACKEND/app/models/` SQLAlchemy modelljei alapján készült.
-
-## 
-
-## 
+A dokumentum a projekt `BACKEND/database.sql` fájlja és a `BACKEND/app/models/` SQLAlchemy modelljei alapján készült.
 
 ## 
 
@@ -15,12 +11,10 @@ A dokumentum a jelenlegi projekt `BACKEND/database.sql` fájlja és a `BACKEND/a
 |PK|Primary Key, elsődleges kulcs|
 |FK|Foreign Key, idegen kulcs|
 |UNIQUE / AK|Egyedi alternatív kulcs|
+|INDEX|Keresést gyorsító adatbázis-index|
+|CHECK|Adatbázisszintű megszorítás|
 |NULL|Opcionális mező|
 |NOT NULL|Kötelező mező|
-
-## 
-
-## 
 
 ## 
 
@@ -36,64 +30,58 @@ A dokumentum a jelenlegi projekt `BACKEND/database.sql` fájlja és a `BACKEND/a
 |roles|name|VARCHAR(30)|UNIQUE|-|Szerepkör neve: User, Clerk, Admin.|
 |users|id|INTEGER|PK|-|Regisztrált felhasználó, ügyintéző vagy admin azonosítója.|
 |users|name|VARCHAR(80)|NOT NULL|-|Felhasználó neve.|
-|users|email|VARCHAR(120)|UNIQUE|-|Bejelentkezési e-mail cím.|
+|users|email|VARCHAR(120)|UNIQUE, INDEX|-|Bejelentkezési e-mail cím.|
 |users|password|VARCHAR(255)|NOT NULL|-|Hash-elt jelszó.|
 |users|phone|VARCHAR(30)|NOT NULL|-|Telefonszám.|
-|users|address\_id|INTEGER|FK|addresses.id|Felhasználó címe.|
+|users|address\_id|INTEGER|FK, INDEX, NULL|addresses.id|Felhasználó címe.|
 |userroles|user\_id|INTEGER|PK + FK|users.id|Kapcsolótábla: felhasználó oldala.|
 |userroles|role\_id|INTEGER|PK + FK|roles.id|Kapcsolótábla: szerepkör oldala.|
 |customers|id|INTEGER|PK|-|Nem regisztrált ügyfél azonosítója.|
 |customers|name|VARCHAR(80)|NOT NULL|-|Ügyfél neve.|
 |customers|email|VARCHAR(120)|NULL|-|Ügyfél e-mail címe.|
 |customers|phone|VARCHAR(30)|NOT NULL|-|Ügyfél telefonszáma.|
-|customers|address\_id|INTEGER|FK|addresses.id|Ügyfél címe.|
+|customers|address\_id|INTEGER|FK, INDEX, NULL|addresses.id|Ügyfél címe.|
 |cars|id|INTEGER|PK|-|Autó azonosítója.|
-|cars|license\_plate|VARCHAR(20)|UNIQUE|-|Rendszám.|
+|cars|license\_plate|VARCHAR(20)|UNIQUE, INDEX|-|Rendszám.|
 |cars|brand|VARCHAR(50)|NOT NULL|-|Márka.|
 |cars|model|VARCHAR(50)|NOT NULL|-|Modell.|
 |cars|category|VARCHAR(50)|NOT NULL|-|Kategória.|
-|cars|year|INTEGER|NOT NULL|-|Gyártási év.|
-|cars|daily\_price|FLOAT|NOT NULL|-|Napi bérleti díj.|
-|cars|odometer|INTEGER|NOT NULL|-|Kilométeróra állás.|
+|cars|year|INTEGER|NOT NULL, CHECK >= 1980|-|Gyártási év.|
+|cars|daily\_price|FLOAT|NOT NULL, CHECK > 0|-|Napi bérleti díj.|
+|cars|odometer|INTEGER|NOT NULL, CHECK >= 0|-|Kilométeróra állás.|
 |cars|available|BOOLEAN|NOT NULL|-|Aktuálisan kölcsönözhető-e.|
 |cars|active|BOOLEAN|NOT NULL|-|Aktív-e a rendszerben.|
 |cars|description|VARCHAR(255)|NULL|-|Rövid leírás.|
 |rentals|id|INTEGER|PK|-|Kölcsönzés azonosítója.|
-|rentals|car\_id|INTEGER|FK|cars.id|Kölcsönzött autó.|
-|rentals|user\_id|INTEGER|FK, NULL|users.id|Regisztrált kölcsönző.|
-|rentals|customer\_id|INTEGER|FK, NULL|customers.id|Vendég ügyfél.|
+|rentals|car\_id|INTEGER|FK, INDEX|cars.id|Kölcsönzött autó.|
+|rentals|user\_id|INTEGER|FK, INDEX, NULL|users.id|Regisztrált kölcsönző.|
+|rentals|customer\_id|INTEGER|FK, INDEX, NULL|customers.id|Vendég ügyfél.|
 |rentals|start\_date|DATE|NOT NULL|-|Kölcsönzés kezdete.|
-|rentals|end\_date|DATE|NOT NULL|-|Tervezett vége.|
-|rentals|status|VARCHAR(30)|NOT NULL|-|requested / accepted / handed\_over / returned.|
-|rentals|request\_time|DATETIME|NOT NULL|-|Igény leadásának ideje.|
+|rentals|end\_date|DATE|NOT NULL, CHECK end\_date >= start\_date|-|Tervezett vége.|
+|rentals|status|VARCHAR(30)|NOT NULL, INDEX|-|requested / accepted / handed\_over / returned.|
+|rentals|request\_time|DATETIME|NOT NULL, INDEX|-|Igény leadásának ideje.|
 |rentals|accepted\_at|DATETIME|NULL|-|Elfogadás időpontja.|
 |rentals|handover\_at|DATETIME|NULL|-|Autó átadása.|
 |rentals|returned\_at|DATETIME|NULL|-|Autó visszavétele.|
-|rentals|start\_odometer|INTEGER|NULL|-|Km átadáskor.|
-|rentals|end\_odometer|INTEGER|NULL|-|Km visszavételkor.|
-|rentals|total\_price|FLOAT|NOT NULL|-|Teljes ár.|
-|rentals|clerk\_id|INTEGER|FK, NULL|users.id|Elfogadó/átadó ügyintéző.|
-|rentals|return\_clerk\_id|INTEGER|FK, NULL|users.id|Visszavevő ügyintéző.|
+|rentals|start\_odometer|INTEGER|NULL, CHECK >= 0|-|Km átadáskor.|
+|rentals|end\_odometer|INTEGER|NULL, CHECK >= start\_odometer|-|Km visszavételkor.|
+|rentals|total\_price|FLOAT|NOT NULL, CHECK >= 0|-|Teljes ár.|
+|rentals|clerk\_id|INTEGER|FK, INDEX, NULL|users.id|Elfogadó/átadó ügyintéző.|
+|rentals|return\_clerk\_id|INTEGER|FK, INDEX, NULL|users.id|Visszavevő ügyintéző.|
 |invoices|id|INTEGER|PK|-|Számla azonosítója.|
-|invoices|rental\_id|INTEGER|FK + UNIQUE|rentals.id|Egy kölcsönzéshez legfeljebb egy számla.|
-|invoices|invoice\_number|VARCHAR(40)|UNIQUE|-|Számlaszám.|
+|invoices|rental\_id|INTEGER|FK + UNIQUE, INDEX|rentals.id|Egy kölcsönzéshez legfeljebb egy számla.|
+|invoices|invoice\_number|VARCHAR(40)|UNIQUE, INDEX|-|Számlaszám.|
 |invoices|issue\_date|DATETIME|NOT NULL|-|Kiállítás ideje.|
-|invoices|net\_amount|FLOAT|NOT NULL|-|Nettó összeg.|
-|invoices|tax\_amount|FLOAT|NOT NULL|-|Áfa.|
-|invoices|gross\_amount|FLOAT|NOT NULL|-|Bruttó összeg.|
+|invoices|net\_amount|FLOAT|NOT NULL, CHECK >= 0|-|Nettó összeg.|
+|invoices|tax\_amount|FLOAT|NOT NULL, CHECK >= 0|-|Áfa.|
+|invoices|gross\_amount|FLOAT|NOT NULL, CHECK >= 0|-|Bruttó összeg.|
 |invoices|paid|BOOLEAN|NOT NULL|-|Fizetett-e.|
 |activity\_logs|id|INTEGER|PK|-|Naplóbejegyzés azonosítója.|
-|activity\_logs|user\_id|INTEGER|FK, NULL|users.id|Műveletet végző felhasználó.|
+|activity\_logs|user\_id|INTEGER|FK, INDEX, NULL|users.id|Műveletet végző felhasználó.|
 |activity\_logs|action|VARCHAR(80)|NOT NULL|-|Művelet neve.|
 |activity\_logs|entity|VARCHAR(80)|NOT NULL|-|Érintett entitás.|
 |activity\_logs|entity\_id|INTEGER|NULL|-|Érintett rekord azonosítója.|
-|activity\_logs|created\_at|DATETIME|NOT NULL|-|Naplózás ideje.|
-
-
-
-## 
-
-## 
+|activity\_logs|created\_at|DATETIME|NOT NULL, INDEX|-|Naplózás ideje.|
 
 ## 
 
@@ -112,12 +100,6 @@ A dokumentum a jelenlegi projekt `BACKEND/database.sql` fájlja és a `BACKEND/a
 |rentals|invoices|1:0..1|invoices.rental\_id|A UNIQUE rental\_id miatt egy kölcsönzéshez legfeljebb egy számla tartozik.|
 |users|activity\_logs|1:N|activity\_logs.user\_id|A naplóban látszik, melyik felhasználó végzett műveletet.|
 
-
-
-## 
-
-## 
-
 ## 
 
 ## Fontos tervezési döntések
@@ -131,8 +113,8 @@ A dokumentum a jelenlegi projekt `BACKEND/database.sql` fájlja és a `BACKEND/a
 |Az autó törlése logikai törlés|Az `active=False` megőrzi a korábbi kölcsönzési előzményeket.|
 |A számla `rental\_id` mezője UNIQUE|Egy kölcsönzéshez legfeljebb egy számla tartozhat.|
 |A műveletek `activity\_logs` táblába kerülnek|Admin oldalon ellenőrizhető, hogy ki mit módosított.|
-
-
+|A fontos keresési mezők indexelve vannak|Gyorsabb az autólista, a kölcsönzési listák, a napló és a bejelentkezési e-mail keresés.|
+|A fő üzleti szabályok CHECK megszorításokban is szerepelnek|Az adatbázis szintjén is védve van például a negatív ár, hibás km óra és rossz dátumtartomány ellen.|
 
 
 

@@ -4,11 +4,9 @@ A `FRONTEND/` mappa jelenleg előkészített hely. A kliensoldal fejlesztését 
 
 ## 
 
-## 
-
 ## Javasolt mappaszerkezet
 
-```
+```text
 FRONTEND/
 ├─ public/
 └─ src/
@@ -17,8 +15,6 @@ FRONTEND/
    ├─ pages/
    └─ services/
 ```
-
-## 
 
 ## 
 
@@ -38,14 +34,11 @@ FRONTEND/
 |/clerk/requests|Beérkezett igények|ClerkService.listRequests()|GET /api/clerk/rentals/requests|Clerk/Admin|Ügyintézői feldolgozás kezdő oldala.|
 |/clerk/running|Futó kölcsönzések|ClerkService.listRunning()|GET /api/clerk/rentals/running|Clerk/Admin|Átadás/visszavétel munkafolyamat.|
 |/clerk/expired|Lejárt kölcsönzések|ClerkService.listExpired()|GET /api/clerk/rentals/expired|Clerk/Admin|Ellenőrzés és utánkövetés.|
+|/clerk/invoice/:rentalId|Számla|ClerkService.createInvoice(rentalId)|POST /api/clerk/rentals/{rid}/invoice|Clerk/Admin|Visszahozott kölcsönzés számlázása.|
 |/admin/cars|Admin autólista|AdminService.listCars()|GET /api/admin/cars|Admin|Teljes autóállomány kezelése.|
 |/admin/cars/new|Új autó|AdminService.createCar(data)|POST /api/admin/cars|Admin|Új autó felvitele.|
 |/admin/cars/:id/edit|Autó módosítás|AdminService.update/delete/patch()|PUT/DELETE/PATCH /api/admin/cars/...|Admin|Adatfrissítés, km óra és elérhetőség kezelése.|
 |/admin/logs|Napló|AdminService.getLogs()|GET /api/admin/logs|Admin|Műveletek ellenőrzése.|
-
-
-
-## 
 
 ## 
 
@@ -65,10 +58,6 @@ FRONTEND/
 
 ## 
 
-## 
-
-## 
-
 ## Frontend oldalak szerepkör szerint
 
 |Szerepkör|Oldalak|Backend adat|
@@ -77,10 +66,6 @@ FRONTEND/
 |User|profil, profil módosítás, saját kölcsönzések, regisztrált igény|token alapján szűrt user adat|
 |Clerk|beérkezett igények, futó kölcsönzések, lejárt kölcsönzések, átadás, visszavétel, számla|ügyintézői végpontok|
 |Admin|autó admin, új autó, autó szerkesztés, km óra, elérhetőség, napló|admin végpontok|
-
-## 
-
-## 
 
 ## 
 
@@ -93,10 +78,7 @@ FRONTEND/
 |API hívások `services` alatt|A backend kommunikáció nem keveredik a megjelenítési logikával.|
 |Közös `apiClient`|Egy helyen kezelhető a base URL, token és hibakezelés.|
 |Szerepkör alapú navigáció|A user, clerk és admin felületek nem keverednek.|
-
-
-
-
+|A frontend nem ér el közvetlen adatbázist|Az adatbázist kizárólag a Python backend kezeli.|
 
 
 

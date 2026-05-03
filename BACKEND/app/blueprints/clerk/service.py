@@ -1,4 +1,3 @@
-from app.blueprints.rental.schemas import InvoiceSchema, RentalResponseSchema
 from app.extensions import db
 from app.models.activitylog import ActivityLog
 from app.models.invoice import Invoice
@@ -15,17 +14,17 @@ class ClerkService:
     @staticmethod
     def list_requests():
         records = db.session.execute(select(Rental).filter_by(status="requested").order_by(Rental.request_time)).scalars().all()
-        return True, RentalResponseSchema().dump(obj=records, many=True)
+        return True, records
 
     @staticmethod
     def list_running():
         records = db.session.execute(select(Rental).where(Rental.status.in_(["accepted", "handed_over"])).order_by(Rental.start_date)).scalars().all()
-        return True, RentalResponseSchema().dump(obj=records, many=True)
+        return True, records
 
     @staticmethod
     def list_expired():
         records = db.session.execute(select(Rental).where((Rental.status == "returned") | ((Rental.end_date < date.today()) & (Rental.status != "cancelled"))).order_by(Rental.end_date.desc())).scalars().all()
-        return True, RentalResponseSchema().dump(obj=records, many=True)
+        return True, records
 
     @staticmethod
     def accept(uid, rid):
@@ -38,7 +37,7 @@ class ClerkService:
             rental.accepted_at = datetime.utcnow()
             ClerkService.log(uid, "rental_accept", "Rental", rental.id)
             db.session.commit()
-            return True, RentalResponseSchema().dump(rental)
+            return True, rental
         except Exception:
             db.session.rollback()
             return False, "Accept failed"
@@ -58,7 +57,7 @@ class ClerkService:
             rental.car.available = False
             ClerkService.log(uid, "car_handover", "Rental", rental.id)
             db.session.commit()
-            return True, RentalResponseSchema().dump(rental)
+            return True, rental
         except Exception:
             db.session.rollback()
             return False, "Handover failed"
@@ -79,7 +78,7 @@ class ClerkService:
             rental.car.available = rental.car.active
             ClerkService.log(uid, "car_return", "Rental", rental.id)
             db.session.commit()
-            return True, RentalResponseSchema().dump(rental)
+            return True, rental
         except Exception:
             db.session.rollback()
             return False, "Return failed"
@@ -100,7 +99,7 @@ class ClerkService:
             db.session.flush()
             ClerkService.log(uid, "invoice_create", "Invoice", invoice.id)
             db.session.commit()
-            return True, InvoiceSchema().dump(invoice)
+            return True, invoice
         except Exception:
             db.session.rollback()
             return False, "Invoice creation failed"

@@ -10,7 +10,7 @@ class Customer(db.Model):
     name: Mapped[str] = mapped_column(String(80))
     email: Mapped[Optional[str]] = mapped_column(String(120))
     phone: Mapped[str] = mapped_column(String(30))
-    address_id: Mapped[Optional[int]] = mapped_column(ForeignKey("addresses.id"))
+    address_id: Mapped[Optional[int]] = mapped_column(ForeignKey("addresses.id"), index=True)
 
     address: Mapped[Optional["Address"]] = relationship(back_populates="customers")
     rentals: Mapped[List["Rental"]] = relationship(back_populates="customer")

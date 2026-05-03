@@ -1,10 +1,10 @@
-from app.blueprints.rental.schemas import RentalResponseSchema
 from app.extensions import db
 from app.models.address import Address
 from app.models.car import Car
 from app.models.customer import Customer
 from app.models.rental import Rental
 from app.models.activitylog import ActivityLog
+from datetime import date
 from sqlalchemy import select
 
 class RentalService:
@@ -27,6 +27,8 @@ class RentalService:
             car = db.session.get(Car, request["car_id"])
             if car is None or not car.active or not car.available:
                 return False, "Car is not available"
+            if request["start_date"] < date.today():
+                return False, "Rental cannot start in the past"
             if request["end_date"] < request["start_date"]:
                 return False, "Invalid rental period"
             if RentalService.has_overlap(car.id, request["start_date"], request["end_date"]):
@@ -40,7 +42,7 @@ class RentalService:
             db.session.flush()
             db.session.add(ActivityLog(user_id=None, action="public_rental_request", entity="Rental", entity_id=rental.id))
             db.session.commit()
-            return True, RentalResponseSchema().dump(rental)
+            return True, rental
         except Exception:
             db.session.rollback()
             return False, "Incorrect rental data"

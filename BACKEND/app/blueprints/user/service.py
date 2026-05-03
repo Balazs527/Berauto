@@ -1,6 +1,5 @@
 from app.extensions import db
-from app.blueprints.user.schemas import PayloadSchema, RoleSchema, UserResponseSchema
-from app.blueprints.rental.schemas import RentalResponseSchema
+from app.blueprints.user.schemas import RoleSchema
 from app.models.address import Address
 from app.models.car import Car
 from app.models.rental import Rental
@@ -8,7 +7,7 @@ from app.models.role import Role
 from app.models.user import User
 from app.models.activitylog import ActivityLog
 from authlib.jose import jwt
-from datetime import datetime, timedelta
+from datetime import date, datetime, timedelta
 from flask import current_app
 from sqlalchemy import select
 
@@ -20,11 +19,12 @@ class UserService:
 
     @staticmethod
     def token_generate(user):
-        payload = PayloadSchema()
-        payload.exp = int((datetime.now() + timedelta(minutes=60)).timestamp())
-        payload.user_id = user.id
-        payload.roles = RoleSchema().dump(obj=user.roles, many=True)
-        token = jwt.encode({"alg": "HS256"}, PayloadSchema().dump(payload), current_app.config["SECRET_KEY"])
+        payload = {
+            "user_id": user.id,
+            "roles": RoleSchema().dump(obj=user.roles, many=True),
+            "exp": int((datetime.now() + timedelta(minutes=60)).timestamp())
+        }
+        token = jwt.encode({"alg": "HS256"}, payload, current_app.config["SECRET_KEY"])
         if isinstance(token, bytes):
             return token.decode()
         return token
@@ -42,7 +42,7 @@ class UserService:
             db.session.flush()
             UserService.log(user.id, "registrate", "User", user.id)
             db.session.commit()
-            return True, UserResponseSchema().dump(user)
+            return True, user
         except Exception:
             db.session.rollback()
             return False, "Incorrect user data"
@@ -53,9 +53,8 @@ class UserService:
             user = db.session.execute(select(User).filter_by(email=request["email"])).scalar_one()
             if not user.check_password(request["password"]):
                 return False, "Incorrect e-mail or password"
-            response = UserResponseSchema().dump(user)
-            response["token"] = UserService.token_generate(user)
-            return True, response
+            user.token = UserService.token_generate(user)
+            return True, user
         except Exception:
             return False, "Incorrect login data"
 
@@ -64,7 +63,7 @@ class UserService:
         user = db.session.get(User, uid)
         if user is None:
             return False, "User not found"
-        return True, UserResponseSchema().dump(user)
+        return True, user
 
     @staticmethod
     def update_profile(uid, request):
@@ -83,7 +82,7 @@ class UserService:
                     user.address.postalcode = request["address"]["postalcode"]
             UserService.log(uid, "profile_update", "User", uid)
             db.session.commit()
-            return True, UserResponseSchema().dump(user)
+            return True, user
         except Exception:
             db.session.rollback()
             return False, "Incorrect profile data"
@@ -91,7 +90,7 @@ class UserService:
     @staticmethod
     def rental_history(uid):
         records = db.session.execute(select(Rental).filter_by(user_id=uid).order_by(Rental.request_time.desc())).scalars().all()
-        return True, RentalResponseSchema().dump(obj=records, many=True)
+        return True, records
 
     @staticmethod
     def request_rental(uid, request):
@@ -99,6 +98,8 @@ class UserService:
             car = db.session.get(Car, request["car_id"])
             if car is None or not car.active or not car.available:
                 return False, "Car is not available"
+            if request["start_date"] < date.today():
+                return False, "Rental cannot start in the past"
             if request["end_date"] < request["start_date"]:
                 return False, "Invalid rental period"
             if UserService.has_overlap(car.id, request["start_date"], request["end_date"]):
@@ -109,7 +110,7 @@ class UserService:
             db.session.flush()
             UserService.log(uid, "rental_request", "Rental", rental.id)
             db.session.commit()
-            return True, RentalResponseSchema().dump(rental)
+            return True, rental
         except Exception:
             db.session.rollback()
             return False, "Incorrect rental data"

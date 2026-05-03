@@ -4,10 +4,6 @@ A backend a `BACKEND/` mappában található. Minden parancsot a projekt gyöker
 
 ## 
 
-## 
-
-## 
-
 ## Első indítás
 
 ```powershell
@@ -22,10 +18,6 @@ python run\_app.py
 
 ## 
 
-## 
-
-## 
-
 ## Újraindítás, ha már létezik a virtuális környezet
 
 ```powershell
@@ -36,19 +28,11 @@ python run\_app.py
 
 ## 
 
-## 
-
-## 
-
 ## Swagger felület
 
 ```text
 http://localhost:8888/swagger
 ```
-
-## 
-
-## 
 
 ## 
 
@@ -66,10 +50,6 @@ Várt válasz:
 
 ## 
 
-## 
-
-## 
-
 ## Adatbázis újragenerálása
 
 ```powershell
@@ -82,7 +62,15 @@ Ez törli és újra létrehozza a `BACKEND/berauto.db` adatbázist, majd betölt
 
 ## 
 
-## 
+## Backend tesztek futtatása
+
+```powershell
+cd BACKEND
+.\\.venv\\Scripts\\Activate.ps1
+python test\_backend.py
+```
+
+A `test\_backend.py` ellenőrzi többek között a bejelentkezést, tokenhasználatot, kölcsönzést, átfedő foglalás tiltását, ügyintézői elfogadást, átadást, visszavételt, számlakészítést, admin autófelvitelt és a hibás admin műveletek tiltását.
 
 ## 
 
@@ -90,15 +78,9 @@ Ez törli és újra létrehozza a `BACKEND/berauto.db` adatbázist, majd betölt
 
 |Szerep|E-mail|Jelszó|Mire használható?|
 |-|-|-|-|
-|Admin|admin@berauto.hu|admin123|Admin oldalak, autókezelés, napló.|
-|Ügyintéző|ugyintezo@berauto.hu|ugyintezo123|Ügyintézői oldalak, kölcsönzések kezelése.|
-|Felhasználó|teszt@berauto.hu|teszt123|Felhasználói oldalak, saját kölcsönzések.|
-
-
-
-## 
-
-## 
+|Admin|`admin@berauto.hu`|`admin123`|Admin oldalak, autókezelés, napló|
+|Ügyintéző|`ugyintezo@berauto.hu`|`ugyintezo123`|Ügyintézői oldalak, kölcsönzések kezelése|
+|Felhasználó|`teszt@berauto.hu`|`teszt123`|Felhasználói oldalak, saját kölcsönzések|
 
 ## 
 
@@ -108,15 +90,14 @@ Ez törli és újra létrehozza a `BACKEND/berauto.db` adatbázist, majd betölt
 |-|-|
 |`BACKEND/run\_app.py`|A backend indítása|
 |`BACKEND/init\_db.py`|Adatbázis inicializálása|
+|`BACKEND/test\_backend.py`|Backend működésének ellenőrzése|
 |`BACKEND/config.py`|SQLite elérési út és konfiguráció|
 |`BACKEND/database.sql`|SQL adatbázisséma|
 |`BACKEND/berauto.db`|SQLite adatbázis|
 |`BACKEND/app/\_\_init\_\_.py`|APIFlask alkalmazás létrehozása|
 |`BACKEND/app/blueprints/`|Végpontok modulonként|
 |`BACKEND/app/models/`|ORM modellek|
-|`BACKEND/app/extensions.py`|`db` és `auth` közös objektumok|
-
-
+|`BACKEND/app/extensions.py`|`db`, `auth` és SQLite foreign key beállítás|
 
 
 

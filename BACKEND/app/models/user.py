@@ -10,10 +10,10 @@ class User(db.Model):
     __tablename__ = "users"
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(String(80))
-    email: Mapped[str] = mapped_column(String(120), unique=True)
+    email: Mapped[str] = mapped_column(String(120), unique=True, index=True)
     password: Mapped[str] = mapped_column(String(255))
     phone: Mapped[str] = mapped_column(String(30))
-    address_id: Mapped[Optional[int]] = mapped_column(ForeignKey("addresses.id"))
+    address_id: Mapped[Optional[int]] = mapped_column(ForeignKey("addresses.id"), index=True)
 
     address: Mapped[Optional["Address"]] = relationship(back_populates="users")
     roles: Mapped[List["Role"]] = relationship(secondary=UserRole, back_populates="users")
