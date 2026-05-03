@@ -26,11 +26,7 @@
 |`python test\_backend.py`|Sikeres|
 |`PRAGMA foreign\_keys`|`1`|
 |`PRAGMA foreign\_key\_check`|Üres eredmény, nincs sérült idegen kulcs|
-|`régi dokumentációs név` hivatkozások keresése|Nem maradt ilyen hivatkozás|
 
 ## 
 
-## 
-
-## 
 
