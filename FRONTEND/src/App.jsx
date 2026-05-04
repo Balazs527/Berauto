@@ -36,6 +36,22 @@ function App() {
   function handleLoginSuccess(payload) {
     const { primaryRole, token, id, email, name, phone, address, roles } =
       payload
+        localStorage.setItem("token", token)
+    setAuth({
+      isAuthenticated: true,
+      role: primaryRole,
+      token: token || '',
+      name: name || '',
+      user: { id, email, name, phone, address, roles },
+    })
+  }
+
+  function handleProfileUpdate(payload) {
+    const { primaryRole, token, id, email, name, phone, address, roles } =
+      payload
+
+      localStorage.setItem("token", token)
+
     setAuth({
       isAuthenticated: true,
       role: primaryRole,
@@ -71,14 +87,23 @@ function App() {
             )
           }
         />
-        <Route path="/register" element={<RegisterPage />} />
+        <Route
+          path="/register"
+          element={
+            auth.isAuthenticated ? (
+              <Navigate to={redirectPathAfterLogin} replace />
+            ) : (
+              <RegisterPage onLoginSuccess={handleLoginSuccess} />
+            )
+          }
+        />
         <Route path="/guest-rental" element={<GuestRentalPage />} />
 
         <Route
           path="/profile"
           element={
             <ProtectedRoute auth={auth} roles={['user', 'clerk', 'admin']}>
-              <ProfilePage auth={auth} />
+              <ProfilePage auth={auth} onProfileUpdate={handleProfileUpdate} />
             </ProtectedRoute>
           }
         />

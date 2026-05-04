@@ -17,6 +17,7 @@ async function request(path, options = {}) {
   const response = await fetch(`${API_BASE_URL}${path}`, {
     method,
     headers: {
+      ...getAuthHeader(),
       ...headers,
     },
     body,
@@ -49,4 +50,23 @@ async function postJson(path, jsonBody, extraHeaders = {}) {
   })
 }
 
-export { API_BASE_URL, request, getJson, postJson, parseErrorBody }
+/**
+ * JSON body küldése PUT kérésként (pl. PUT /api/user/profile)
+ */
+async function putJson(path, jsonBody, extraHeaders = {}) {
+  return request(path, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      ...extraHeaders,
+    },
+    body: JSON.stringify(jsonBody),
+  })
+}
+
+function getAuthHeader() {
+  const token = localStorage.getItem('token')
+  return token ? { Authorization: `Bearer ${token}` } : {}
+}
+
+export { API_BASE_URL, request, getJson, postJson, putJson, parseErrorBody }

@@ -42,6 +42,7 @@ class UserService:
             db.session.flush()
             UserService.log(user.id, "registrate", "User", user.id)
             db.session.commit()
+            user.token = UserService.token_generate(user)
             return True, user
         except Exception:
             db.session.rollback()
@@ -82,6 +83,7 @@ class UserService:
                     user.address.postalcode = request["address"]["postalcode"]
             UserService.log(uid, "profile_update", "User", uid)
             db.session.commit()
+            user.token = UserService.token_generate(user)
             return True, user
         except Exception:
             db.session.rollback()
