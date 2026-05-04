@@ -1,33 +1,16 @@
-# BérAutó FRONTEND
+# React + Vite
 
-Ez a mappa a későbbi kliensoldali alkalmazás helye.
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-Javasolt felépítés:
+Currently, two official plugins are available:
 
-```text
-FRONTEND/
-  public/
-  src/
-    assets/
-    components/
-    pages/
-    services/
-```
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
 
-## 
+## React Compiler
 
-## Tervezett frontend rétegek
+The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
 
-* `pages` - oldalak, például autólista, bejelentkezés, profil, ügyintézői felület, admin felület
-* `components` - újrahasznosítható komponensek, például autókártya, táblázat, űrlap, navigáció
-* `services` - backend API-hívásokat végző modulok, például AuthService, CarService, RentalService
-* `assets` - képek, ikonok és statikus fájlok
+## Expanding the ESLint configuration
 
-
-
-A backend API alapértelmezett címe fejlesztés közben:
-
-```text
-http://localhost:8888
-```
-
+If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
