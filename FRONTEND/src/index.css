@@ -57,3 +57,29 @@ body {
   background: #f8d7da;
   color: #721c24;
 }
+
+.filter-bar {
+  margin-bottom: 16px;
+}
+
+.filter-bar button {
+  margin-right: 8px;
+  padding: 6px 12px;
+  cursor: pointer;
+}
+
+.clerk-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.clerk-table th,
+.clerk-table td {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+  text-align: left;
+}
+
+.clerk-table tr:hover {
+  background: #f9f9f9;
+}

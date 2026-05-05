@@ -417,3 +417,104 @@
   margin-bottom: 1.5rem;
   color: #111827;
 }
+
+.filter-bar {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.filter-bar button {
+  padding: 0.6rem 1rem;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  background: #fff;
+  color: #111827;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.filter-bar button:hover {
+  background: #f3f4f6;
+  border-color: #124b8c;
+}
+
+.table-wrapper {
+  overflow-x: auto;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  margin-bottom: 2rem;
+}
+
+.clerk-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+
+.clerk-table thead {
+  background: #f9fafb;
+  border-bottom: 2px solid #e5e7eb;
+}
+
+.clerk-table th {
+  padding: 1rem;
+  text-align: left;
+  font-weight: 600;
+  color: #111827;
+}
+
+.clerk-table td {
+  padding: 1rem;
+  border-bottom: 1px solid #e5e7eb;
+  color: #374151;
+}
+
+.clerk-table tbody tr:hover {
+  background-color: #f9fafb;
+}
+
+.clerk-table button {
+  padding: 0.5rem 0.8rem;
+  border: none;
+  border-radius: 4px;
+  background: #124b8c;
+  color: #fff;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.clerk-table button:hover {
+  background: #0e3a61;
+}
+
+.invoice-preview {
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  padding: 1rem;
+  margin: 1.5rem 0;
+}
+
+.invoice-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.invoice-row:last-child {
+  border-bottom: none;
+}
+
+.invoice-row span {
+  color: #6b7280;
+}
+
+.invoice-row strong {
+  color: #111827;
+  font-size: 1.05rem;
+}

@@ -62,6 +62,7 @@ function App() {
   }
 
   function logout() {
+    localStorage.removeItem('token')
     setAuth({
       isAuthenticated: false,
       role: 'guest',
