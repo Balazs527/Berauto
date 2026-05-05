@@ -244,10 +244,12 @@ python init\_db.py
 |Felhasználó|`POST /api/user/registrate`|Regisztráció|
 |Felhasználó|`POST /api/user/login`|Bejelentkezés|
 |Felhasználó|`GET /api/user/profile`|Saját profil lekérése|
+|Felhasználó|`GET /api/user/me`|Token alapján azonosítja a bejelentkezett felhasználót|
 |Felhasználó|`PUT /api/user/profile`|Saját profil módosítása|
 |Felhasználó|`GET /api/user/rentals`|Saját kölcsönzések|
 |Felhasználó|`POST /api/user/rentals/request`|Regisztrált kölcsönzési igény|
 |Ügyintéző|`GET /api/clerk/rentals/requests`|Beérkezett igények|
+|Ügyintéző|`GET /api/clerk/cars`|Összes autó ügyintéző listája|
 |Ügyintéző|`GET /api/clerk/rentals/running`|Futó kölcsönzések|
 |Ügyintéző|`GET /api/clerk/rentals/expired`|Lejárt kölcsönzések|
 |Ügyintéző|`POST /api/clerk/rentals/{rid}/accept`|Igény elfogadása|
@@ -278,6 +280,16 @@ A `FRONTEND/` mappa jelenleg előkészített hely. A későbbi kliensoldali alka
 
 ## 
 
+## Frontend indítása
+
+A frontend alkalmazás külön Vite + React projekt.
+
+```bash
+cd FRONTEND
+npm install
+npm run dev
+
+
 ## Dokumentáció
 
 A részletes dokumentáció a `DOKUMENTACIO/` mappában található.
@@ -289,6 +301,16 @@ DOKUMENTACIO/README.md
 ```
 
 ## 
+
+## Tech stack
+
+- Backend: Flask (Python)
+- ORM: SQLAlchemy
+- API: APIFlask (REST API)
+- Database: SQLite
+- Frontend: React + Vite
+- HTTP kommunikáció: Fetch API
+- Auth: JWT / token alapú hitelesítés
 
 ## Visual Studio Code használat
 
@@ -318,6 +340,9 @@ DOKUMENTACIO/
 |`\_\_pycache\_\_`|Python által generált gyorsítótár, nem forráskód.|
 |SQLite adatbázis|A `BACKEND/init\_db.py` futtatásával újragenerálható.|
 |Dokumentációs mappa neve|A projektben a dokumentációs mappa neve egységesen `DOKUMENTACIO/`.|
+
+
+
 
 
 
