@@ -6,7 +6,7 @@ function ClerkCarAvailable() {
   const [cars, setCars] = useState([]);
 
  const fetchCars = async () => {
-      const data = await getAllCars();
+      const data = await getAllCars("clerk");
       setCars(data);
     };
 
@@ -45,11 +45,11 @@ function ClerkCarAvailable() {
         <tbody>
           {cars?.map((car) => (
             <tr key={car.id}>
-              <td>car.license_plate</td>
-              <td>car.brand</td>
+              <td>{car.license_plate}</td>
+              <td>{car.brand}</td>
 
-              <td>car.model</td>
-              <td>car.daily_price</td>
+              <td>{car.model}</td>
+              <td>{car.daily_price}</td>
 
               <td>{car.odometer} km</td>
               <td>

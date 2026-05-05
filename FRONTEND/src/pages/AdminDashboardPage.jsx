@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { request } from "../services/apiClient";
 import { getAllCars } from "../services/carService";
-import { MdSpeed, MdSave, MdClose, MdAdd  } from "react-icons/md";
+import { MdSpeed, MdSave, MdClose, MdAdd } from "react-icons/md";
 
 function AdminDashboardPage() {
   const [cars, setCars] = useState([]);
@@ -28,20 +28,25 @@ function AdminDashboardPage() {
   }, []);
 
   async function fetchCars() {
-    const data = await getAllCars();
+    const data = await getAllCars("admin");
     setCars(data);
   }
 
   function startEdit(car) {
     setEditingId(car.id);
-    setEditedCar({ ...car });
+
+    const { id, ...editableFields } = car;
+
+    setEditedCar(editableFields);
   }
 
   async function saveEdit(id) {
+    const { id: _, ...data } = editedCar;
+
     await request(`/api/admin/cars/${id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(editedCar),
+      body: JSON.stringify(data),
     });
 
     setEditingId(null);
@@ -84,11 +89,10 @@ function AdminDashboardPage() {
     fetchCars();
   }
 
-function openOdometerModel(car) {
-
-  setEditedCar(car);
-  setOdometerOpen(true);
-}
+  function openOdometerModel(car) {
+    setEditedCar({ ...car });
+    setOdometerOpen(true);
+  }
 
   async function saveOdometer() {
     try {
@@ -101,8 +105,7 @@ function openOdometerModel(car) {
       fetchCars();
     } catch (error) {
       console.error("Hiba az elérhetőség módosításakor:", error);
-    }
-    finally {
+    } finally {
       setOdometerOpen(false);
     }
   }
@@ -125,7 +128,7 @@ function openOdometerModel(car) {
     <main className="page-shell">
       <h1>Admin dashboard</h1>
 
-      <button 
+      <button
         onClick={() => setShowModal(true)}
         style={{
           display: "inline-flex",
@@ -153,13 +156,17 @@ function openOdometerModel(car) {
         <div style={styles.modalBackdrop}>
           <div style={styles.modalCard}>
             <div style={styles.modalHeader}>
-              <MdAdd  size={24} color="#3b82f6" />
+              <MdAdd size={24} color="#3b82f6" />
               <h2 style={styles.modalCardTitle}>Új autó hozzáadása</h2>
               <button
                 onClick={() => setShowModal(false)}
                 style={styles.closeButton}
-                onMouseOver={(e) => (e.target.style.backgroundColor = "#f3f4f6")}
-                onMouseOut={(e) => (e.target.style.backgroundColor = "#transparent")}
+                onMouseOver={(e) =>
+                  (e.target.style.backgroundColor = "#f3f4f6")
+                }
+                onMouseOut={(e) =>
+                  (e.target.style.backgroundColor = "#transparent")
+                }
               >
                 <MdClose size={20} />
               </button>
@@ -263,7 +270,11 @@ function openOdometerModel(car) {
                 <div style={{ ...styles.formGroup, gridColumn: "1 / -1" }}>
                   <label style={styles.label}>Leírás</label>
                   <textarea
-                    style={{ ...styles.input, minHeight: "80px", resize: "none" }}
+                    style={{
+                      ...styles.input,
+                      minHeight: "80px",
+                      resize: "none",
+                    }}
                     placeholder="Autó leírása..."
                     value={newCar.description}
                     onChange={(e) =>
@@ -304,9 +315,7 @@ function openOdometerModel(car) {
                 onMouseOver={(e) =>
                   (e.target.style.backgroundColor = "#e5e7eb")
                 }
-                onMouseOut={(e) =>
-                  (e.target.style.backgroundColor = "#f3f4f6")
-                }
+                onMouseOut={(e) => (e.target.style.backgroundColor = "#f3f4f6")}
               >
                 <MdClose size={16} />
                 Mégse
@@ -317,9 +326,7 @@ function openOdometerModel(car) {
                 onMouseOver={(e) =>
                   (e.target.style.backgroundColor = "#2563eb")
                 }
-                onMouseOut={(e) =>
-                  (e.target.style.backgroundColor = "#3b82f6")
-                }
+                onMouseOut={(e) => (e.target.style.backgroundColor = "#3b82f6")}
               >
                 <MdSave size={16} />
                 Autó hozzáadása
@@ -427,7 +434,7 @@ function openOdometerModel(car) {
                   <>
                     <span>{car.odometer}</span>
                     <button
-                      onClick={() => openOdometerModel(car) }
+                      onClick={() => openOdometerModel(car)}
                       style={{
                         display: "inline-flex",
                         alignItems: "center",
@@ -459,7 +466,9 @@ function openOdometerModel(car) {
                     <div style={styles.modal}>
                       <div style={styles.modalHeader}>
                         <MdSpeed size={20} color="#10b981" />
-                        <h3 style={styles.modalTitle}>Kilométeróra módosítása</h3>
+                        <h3 style={styles.modalTitle}>
+                          Kilométeróra módosítása
+                        </h3>
                       </div>
 
                       <input
@@ -482,7 +491,7 @@ function openOdometerModel(car) {
                       <div style={styles.buttonGroup}>
                         <button
                           style={styles.buttonCancel}
-                          onClick={() => setOdometerOpen(false) }
+                          onClick={() => setOdometerOpen(false)}
                           onMouseOver={(e) =>
                             (e.target.style.backgroundColor = "#e5e7eb")
                           }
@@ -528,8 +537,28 @@ function openOdometerModel(car) {
               <td>
                 {editingId === car.id ? (
                   <>
-                    <button onClick={() => saveEdit(car.id)}>💾</button>
-                    <button onClick={() => setEditingId(null)}>❌</button>
+                    <button
+                      onClick={() => saveEdit(car.id)}
+                      style={{
+                        background: "none",
+                        border: "none",
+                        cursor: "pointer",
+                        fontSize: "18px",
+                      }}
+                    >
+                      <MdSave color="#10b981" />
+                    </button>
+                    <button
+                      onClick={() => setEditingId(null)}
+                      style={{
+                        background: "none",
+                        border: "none",
+                        cursor: "pointer",
+                        fontSize: "18px",
+                      }}
+                    >
+                      <MdClose color="#ef4444" />
+                    </button>
                   </>
                 ) : (
                   <>
@@ -620,7 +649,7 @@ const styles = {
     fontWeight: "500",
     transition: "background-color 0.2s",
   },
-  
+
   // Új autó modal stílusok
   modalBackdrop: {
     position: "fixed",

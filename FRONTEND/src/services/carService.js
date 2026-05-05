@@ -9,9 +9,9 @@ async function getCars() {
   }
 }
 
-async function getAllCars() {
+async function getAllCars(role) {
   try {
-    return await request("/api/admin/cars")
+    return await request(`/api/${role}/cars`)
   } catch(err) {
     console.error(err);
     throw err;

@@ -18,10 +18,7 @@ function Navbar({ auth, onLogout }) {
     { to: '/clerk/available', label: 'Kölcsönözhetőség' }
   ]
 
-  const adminLinks = [
-    { to: '/admin', label: 'Flotta kezelese' },
-    { to: '/cars', label: 'Uj auto' },
-  ]
+  const adminLinks = []
 
   const links =
     auth.role === 'user'
