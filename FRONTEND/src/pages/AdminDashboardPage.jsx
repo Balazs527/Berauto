@@ -1,7 +1,14 @@
 import { useState, useEffect } from "react";
 import { request } from "../services/apiClient";
 import { getAllCars } from "../services/carService";
-import { MdSpeed, MdSave, MdClose, MdAdd } from "react-icons/md";
+import {
+  MdSpeed,
+  MdSave,
+  MdClose,
+  MdAdd,
+  MdEdit,
+  MdDeleteSweep,
+} from "react-icons/md";
 
 function AdminDashboardPage() {
   const [cars, setCars] = useState([]);
@@ -341,10 +348,14 @@ function AdminDashboardPage() {
         <thead>
           <tr>
             <th>Rendszám</th>
+            <th>Kategória</th>
             <th>Márka</th>
             <th>Modell</th>
+            <th>Év</th>
+            <th>Leírás</th>
             <th>Ár</th>
             <th>Km</th>
+            <th>Aktív</th>
             <th>Kölcsönözhető</th>
             <th>Műveletek</th>
           </tr>
@@ -366,6 +377,22 @@ function AdminDashboardPage() {
                   />
                 ) : (
                   car.license_plate
+                )}
+              </td>
+
+              <td>
+                {editingId === car.id ? (
+                  <input
+                    value={editedCar.category}
+                    onChange={(e) =>
+                      setEditedCar({
+                        ...editedCar,
+                        category: e.target.value,
+                      })
+                    }
+                  />
+                ) : (
+                  car.category
                 )}
               </td>
 
@@ -398,6 +425,38 @@ function AdminDashboardPage() {
                   />
                 ) : (
                   car.model
+                )}
+              </td>
+              <td>
+                {editingId === car.id ? (
+                  <input
+                    type="number"
+                    value={editedCar.year}
+                    onChange={(e) =>
+                      setEditedCar({
+                        ...editedCar,
+                        year: Number(e.target.value),
+                      })
+                    }
+                  />
+                ) : (
+                  car.year
+                )}
+              </td>
+
+              <td>
+                {editingId === car.id ? (
+                  <input
+                    value={editedCar.description}
+                    onChange={(e) =>
+                      setEditedCar({
+                        ...editedCar,
+                        description: e.target.value,
+                      })
+                    }
+                  />
+                ) : (
+                  car.description
                 )}
               </td>
 
@@ -524,6 +583,24 @@ function AdminDashboardPage() {
               </td>
 
               <td>
+                {editingId === car.id ? (
+                  <input
+                    type="checkbox"
+                    checked={editedCar.active}
+                    onChange={(e) =>
+                      setEditedCar({
+                        ...editedCar,
+                        active: e.target.checked,
+                      })
+                    }
+                  />
+                ) : (
+                  car.active ? "Igen" : "Nem"
+                )}
+              </td>
+
+
+              <td>
                 <label className="toggle-switch">
                   <input
                     type="checkbox"
@@ -539,31 +616,31 @@ function AdminDashboardPage() {
                   <>
                     <button
                       onClick={() => saveEdit(car.id)}
-                      style={{
-                        background: "none",
-                        border: "none",
-                        cursor: "pointer",
-                        fontSize: "18px",
-                      }}
+                      style={styles.iconButtons}
                     >
                       <MdSave color="#10b981" />
                     </button>
                     <button
                       onClick={() => setEditingId(null)}
-                      style={{
-                        background: "none",
-                        border: "none",
-                        cursor: "pointer",
-                        fontSize: "18px",
-                      }}
+                      style={styles.iconButtons}
                     >
                       <MdClose color="#ef4444" />
                     </button>
                   </>
                 ) : (
                   <>
-                    <button onClick={() => startEdit(car)}>✏️</button>
-                    <button onClick={() => deleteCar(car.id)}>🗑️</button>
+                    <button
+                      onClick={() => startEdit(car)}
+                      style={styles.iconButtons}
+                    >
+                      <MdEdit color="#10b981" />
+                    </button>
+                    <button
+                      onClick={() => deleteCar(car.id)}
+                      style={styles.iconButtons}
+                    >
+                      <MdDeleteSweep color="#ef4444" />
+                    </button>
                   </>
                 )}
               </td>
@@ -585,6 +662,12 @@ const styles = {
     alignItems: "flex-start",
     paddingTop: "20px",
     paddingRight: "20px",
+  },
+  iconButtons: {
+    background: "none",
+    border: "none",
+    cursor: "pointer",
+    fontSize: "24px",
   },
   modal: {
     background: "#fff",
