@@ -15,6 +15,7 @@ import MyRentalsPage from "./pages/MyRentalsPage";
 import ClerkDashboardPage from "./pages/ClerkDashboardPage";
 import AdminDashboardPage from "./pages/AdminDashboardPage";
 import NotFoundPage from "./pages/NotFoundPage";
+import ClerkCarAvailable from "./pages/ClerkCarAvailable";
 
 function App() {
   const [auth, setAuth] = useState({
@@ -166,6 +167,14 @@ function App() {
               <ClerkDashboardPage />
             </ProtectedRoute>
           }
+        />
+        <Route
+          path="/clerk/available"
+          element={
+            <ProtectedRoute auth={auth} roles={["clerk"]}>
+              <ClerkCarAvailable />
+            </ProtectedRoute>
+          }        
         />
         <Route
           path="/admin"
