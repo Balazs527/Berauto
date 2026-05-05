@@ -128,6 +128,14 @@ def test_full_backend_flow():
         assert profile_verify.json["phone"] == "+36201234567"
         assert profile_verify.json["address"]["city"] == "Budapest"
 
+        me_response = client.get("/api/user/me", headers=user_header)
+        assert me_response.status_code == 200
+        assert me_response.json["name"] == "Teszt User"
+        assert me_response.json["email"] == "user@test.hu"
+        assert "roles" in me_response.json
+        assert "token" in me_response.json
+        assert me_response.json["token"] != ""
+
         car_create = client.post("/api/admin/cars", headers=admin_header, json={"license_plate": "BBB-222", "brand": "Skoda", "model": "Octavia", "category": "Kombi", "year": 2022, "daily_price": 15000, "odometer": 5000, "available": True, "active": True, "description": "Teszt"})
         assert car_create.status_code == 200, car_create.get_data(as_text=True)
         car_id = car_create.json["id"]

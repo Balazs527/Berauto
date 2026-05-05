@@ -24,6 +24,15 @@ def user_login(json_data):
         return response, 200
     raise HTTPError(message=response, status_code=400)
 
+@bp.get("/me")
+@bp.auth_required(auth)
+@bp.output(UserResponseSchema)
+def user_me():
+    success, response = UserService.get_profile_with_token(auth.current_user.get("user_id"))
+    if success:
+        return response, 200
+    raise HTTPError(message=response, status_code=404)
+
 @bp.get("/profile")
 @bp.auth_required(auth)
 @role_required(["User", "Clerk", "Admin"])

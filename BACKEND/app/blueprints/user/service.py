@@ -67,6 +67,14 @@ class UserService:
         return True, user
 
     @staticmethod
+    def get_profile_with_token(uid):
+        user = db.session.get(User, uid)
+        if user is None:
+            return False, "User not found"
+        user.token = UserService.token_generate(user)
+        return True, user
+
+    @staticmethod
     def update_profile(uid, request):
         try:
             user = db.session.get(User, uid)

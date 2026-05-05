@@ -1,3 +1,13 @@
+.app-loading {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  color: #374151;
+  background: #f9fafb;
+}
+
 .app-shell {
   min-height: 100vh;
   max-width: 960px;

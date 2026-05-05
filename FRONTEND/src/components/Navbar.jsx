@@ -13,10 +13,7 @@ function Navbar({ auth, onLogout }) {
     { to: '/profile', label: 'Profil' },
   ]
 
-  const clerkLinks = [
-    { to: '/clerk', label: 'Igenyek kezelese' },
-    { to: '/cars', label: 'Aktiv kolcsonzesek' },
-  ]
+  const clerkLinks = []
 
   const adminLinks = [
     { to: '/admin', label: 'Flotta kezelese' },
