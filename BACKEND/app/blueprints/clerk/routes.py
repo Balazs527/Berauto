@@ -3,6 +3,7 @@ from app.blueprints import role_required
 from app.blueprints.clerk import bp
 from app.blueprints.clerk.service import ClerkService
 from app.blueprints.rental.schemas import HandoverSchema, InvoiceSchema, RentalResponseSchema, ReturnSchema
+from app.blueprints.car.schemas import CarSchema
 from app.extensions import auth
 
 @bp.get("/rentals/requests")
@@ -73,6 +74,16 @@ def clerk_return(rid, json_data):
 @bp.output(InvoiceSchema)
 def clerk_invoice(rid):
     success, response = ClerkService.create_invoice(auth.current_user.get("user_id"), rid)
+    if success:
+        return response, 200
+    raise HTTPError(message=response, status_code=400)
+
+@bp.get("/cars")
+@bp.auth_required(auth)
+@role_required(["Clerk"])
+@bp.output(CarSchema(many=True))
+def clerk_list_cars():
+    success, response = ClerkService.list_cars()
     if success:
         return response, 200
     raise HTTPError(message=response, status_code=400)

@@ -42,6 +42,7 @@ class UserService:
             db.session.flush()
             UserService.log(user.id, "registrate", "User", user.id)
             db.session.commit()
+            user.token = UserService.token_generate(user)
             return True, user
         except Exception:
             db.session.rollback()
@@ -66,6 +67,14 @@ class UserService:
         return True, user
 
     @staticmethod
+    def get_profile_with_token(uid):
+        user = db.session.get(User, uid)
+        if user is None:
+            return False, "User not found"
+        user.token = UserService.token_generate(user)
+        return True, user
+
+    @staticmethod
     def update_profile(uid, request):
         try:
             user = db.session.get(User, uid)
@@ -82,6 +91,7 @@ class UserService:
                     user.address.postalcode = request["address"]["postalcode"]
             UserService.log(uid, "profile_update", "User", uid)
             db.session.commit()
+            user.token = UserService.token_generate(user)
             return True, user
         except Exception:
             db.session.rollback()

@@ -1,5 +1,6 @@
 from apiflask import APIFlask
 from flask_migrate import Migrate
+from flask_cors import CORS
 from config import Config
 from app.extensions import db
 
@@ -7,6 +8,7 @@ from app.extensions import db
 def create_app(config_class=Config):
     app = APIFlask(__name__, json_errors=True, title="BérAutó API", docs_path="/swagger")
     app.config.from_object(config_class)
+    CORS(app, resources={r"/api/*": {"origins": "*"}})
     db.init_app(app)
     Migrate(app, db, render_as_batch=True)
 

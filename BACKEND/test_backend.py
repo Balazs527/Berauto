@@ -101,6 +101,41 @@ def test_full_backend_flow():
         invoice_duplicate = client.post(f"/api/clerk/rentals/{rental_id}/invoice", headers=clerk_header)
         assert invoice_duplicate.status_code == 400
 
+        profile_response = client.get("/api/user/profile", headers=user_header)
+        assert profile_response.status_code == 200
+        assert profile_response.json["email"] == "user@test.hu"
+        assert profile_response.json["phone"] == "+36200000001"
+        assert profile_response.json["address"]["city"] == "Veszprém"
+
+        update_response = client.put("/api/user/profile", headers=user_header, json={
+            "phone": "+36201234567",
+            "address": {
+                "city": "Budapest",
+                "street": "Fő utca 42.",
+                "postalcode": 1011
+            }
+        })
+        assert update_response.status_code == 200, update_response.get_data(as_text=True)
+        assert update_response.json["phone"] == "+36201234567"
+        assert update_response.json["address"]["city"] == "Budapest"
+        assert update_response.json["address"]["street"] == "Fő utca 42."
+        assert update_response.json["address"]["postalcode"] == 1011
+        assert "token" in update_response.json
+        assert update_response.json["token"] != ""
+
+        profile_verify = client.get("/api/user/profile", headers=user_header)
+        assert profile_verify.status_code == 200
+        assert profile_verify.json["phone"] == "+36201234567"
+        assert profile_verify.json["address"]["city"] == "Budapest"
+
+        me_response = client.get("/api/user/me", headers=user_header)
+        assert me_response.status_code == 200
+        assert me_response.json["name"] == "Teszt User"
+        assert me_response.json["email"] == "user@test.hu"
+        assert "roles" in me_response.json
+        assert "token" in me_response.json
+        assert me_response.json["token"] != ""
+
         car_create = client.post("/api/admin/cars", headers=admin_header, json={"license_plate": "BBB-222", "brand": "Skoda", "model": "Octavia", "category": "Kombi", "year": 2022, "daily_price": 15000, "odometer": 5000, "available": True, "active": True, "description": "Teszt"})
         assert car_create.status_code == 200, car_create.get_data(as_text=True)
         car_id = car_create.json["id"]

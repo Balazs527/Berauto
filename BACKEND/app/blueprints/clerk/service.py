@@ -4,6 +4,7 @@ from app.models.invoice import Invoice
 from app.models.rental import Rental
 from datetime import date, datetime
 from sqlalchemy import select
+from app.models.car import Car
 
 class ClerkService:
 
@@ -15,6 +16,11 @@ class ClerkService:
     def list_requests():
         records = db.session.execute(select(Rental).filter_by(status="requested").order_by(Rental.request_time)).scalars().all()
         return True, records
+
+    @staticmethod
+    def list_cars():
+        cars = db.session.execute(select(Car).order_by(Car.id)).scalars().all()
+        return True, cars
 
     @staticmethod
     def list_running():
